@@ -1,29 +1,29 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { defineStore } from 'pinia'
 
-Vue.use(Vuex);
-
-export const store = new Vuex.Store({
-  state: {
-    todos: [],
-  },
-  mutations: {
-    setState(state) {
-      state.todos = [
-        { id: 1, text: '...', done: true },
-        { id: 2, text: '...', done: false },
-      ];
+export const useAppStore = defineStore('app', {
+    state: () => {
+      return {
+        todos: []
+      }
     },
-  },
-  actions: {
-    fetchTodos(context) {
-      // TODO: replace this with an API call to 'https://dummyjson.com/todos'
-      context.commit('setState');
+    getters: {
+      doneTodos: (state) => [...state.todos].filter(todo => todo.completed).sort((a, b) => {
+        const todoA = a.todo.toUpperCase()
+        const todoB = b.todo.toUpperCase()
+        return (todoA < todoB) ? -1 : (todoA > todoB) ? 1 : 0
+      }),
+      unDoneTodos: (state) => [...state.todos].filter(todo => !todo.completed).sort((a, b) => {
+        const todoA = a.todo.toUpperCase()
+        const todoB = b.todo.toUpperCase()
+        return (todoA < todoB) ? -1 : (todoA > todoB) ? 1 : 0
+      }),
     },
-  },
-  getters: {
-    doneTodos: (state) => [...state.todos].filter((todo) => todo.done) || [],
-  },
-});
-
-export default store;
+    actions: {
+      fetchTodos() {
+        fetch('https://dummyjson.com/todos?limit=10')
+          .then(res => res.json())
+          .then(res => this.todos = res.todos)
+      }
+    }
+  }
+);

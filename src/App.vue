@@ -1,17 +1,10 @@
-<template>
-  <div id="app">
-    <HelloWorld msg="Hello Vue 2 + Vite" />
-  </div>
-</template>
-
-<script>
+<script setup>
 import HelloWorld from './components/HelloWorld.vue';
-export default {
-  components: {
-    HelloWorld,
-  },
-};
 </script>
+
+<template>
+    <HelloWorld msg="Hello Vue 2 + Vite" />
+</template>
 
 <style>
 #app {
